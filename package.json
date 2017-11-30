@@ -1,0 +1,24 @@
+{
+  "name": "node-arr",
+  "version": "1.0.0",
+  "description": "Node操作数组实现增删查改操作",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "keywords": [
+    "node",
+    "array",
+    "CURD"
+  ],
+  "author": "董书华",
+  "license": "ISC",
+  "dependencies": {
+    "art-template": "^4.12.1",
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.4",
+    "express-art-template": "^1.0.0",
+    "multer": "^1.3.0"
+  }
+}

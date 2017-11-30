@@ -1,0 +1,164 @@
+{{extend './layout.html'}}
+{{block 'title'}}{{title}}{{/block}} 
+{{block 'head'}}{{/block}} 
+{{block 'content'}}
+
+<div class="container"> 
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">查询条件</h3>
+        </div>
+        <div class="panel-body">
+  <!-- 这里的form表单的跳转的index.js 的 / 接口上，执行相关业务 ， -->
+  <!-- 因为form表单内的查询按钮的功能，也就意味着index.js的那个接口，需要呈现在点击查询后，显示特定数据，不点击的时候，要呈现全部数据  -->
+            <form id="searchForm" action="/" class="form-inline" role="form">
+
+                <div class="form-group">
+                    <label class="sr-only" for="loginname">账号</label>
+                    <input type="text" class="form-control" id="loginname" name="loginname" placeholder="请输入账号进行查询">
+                </div>
+
+                <button id="btnSearch" type="submit" class="btn btn-primary">查询</button>
+                <a class="btn btn-info" href="/user" role="button">添加</a>
+            </form>
+        </div>  
+    </div>
+
+
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" class="selectAll">
+                </th>
+                <th>编号</th>
+                <th>账号</th>
+                <th>密码</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>出生日期</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{each users user}}
+            <tr>
+                <td>
+                    <input type="checkbox" class="selectSingle" data-id="{{user.id}}">
+                </td>
+                <td>{{user.id}}</td>
+                <td>{{user.loginname}}</td>
+                <td>{{user.password}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.sex ? '男' : '女'}}</td>
+                <td>{{user.age}}</td>
+                <td>{{user.birthday | dateFormat 'yyyy年MM月dd日'}}</td>
+                <td>
+                    <a class="btn btn-sm btn-default" href="/user/edit/{{user.id}}" role="button">编辑</a>
+                    <button type="button" class="btn btn-sm btn-danger btnDelete" data-id="{{user.id}}">删除</button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-danger" id="btnDelete">删除</button>
+
+</div>
+
+<div class="modal fade" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnOK">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        var id = undefined;
+        $('.btnDelete').click(function () {
+            $('#modal .modal-body').text('请确认要删除此条数据吗?');
+            $('#btnOK').show();
+            id = $(this).data('id');
+            $('#modal').modal('show');
+        })
+
+        $('#btnOK').click(function () {
+            $.ajax({
+                type: 'DELETE',
+                url: '/user/delete',
+                data: { id },
+                success: function (res) {
+                    if (res.code == 200) {
+                        location.href = '/';
+                    } else {
+                        $('#modal .modal-body').text(res.message);
+                        $('#btnOK').hide();
+                        $('#modal').modal('show');
+                    }
+                }
+            })
+
+        })
+
+        $('.selectAll').click(function () {
+            $('.selectSingle').prop('checked', $(this).prop('checked'));
+        })
+
+        $('.selectSingle').click(function () {
+            $('.selectAll').prop('checked', $('.selectSingle:checked').length == $('.selectSingle').length)
+        })
+
+        $('#btnDelete').click(function () {
+            var selectedCount = $('.selectSingle:checked').length;
+            if (selectedCount > 0) {
+                var ids = '';
+                $('.selectSingle:checked').each(function (i, ele) {
+                    var len = $('.selectSingle:checked').length - 1;
+                    var flag = i == len ? '' : ',';
+                    ids = ids + $(ele).data('id') + flag;
+                })
+
+                $.ajax({
+                    type: 'delete',
+                    url: '/user/deleteMore',
+                    data: { ids },
+                    success: function (res) {
+                        if (res.code == 200) {
+                            location.href = '/';
+                        } else {
+                            $('#modal .modal-body').text(res.message);
+                            $('#btnOK').hide();
+                            $('#modal').modal('show');
+                        }
+                    }
+                })
+
+            } else {
+                $('#modal .modal-body').text('请选择要删除的数据！');
+                $('#btnOK').hide();
+                $('#modal').modal('show');
+            }
+        })
+
+
+    })
+
+</script>
+
+{{/block}}

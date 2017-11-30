@@ -1,0 +1,94 @@
+<!-- 先继承layout.html，把一些特殊的地方覆盖，比如：标题，头部，内容区 -->
+{{extend './layout.html'}} 
+{{block 'title'}}{{title}}{{/block}} 
+{{block 'head'}} 
+<link rel="stylesheet" href="/styles/login.css">
+{{/block}} 
+{{block 'content'}} 
+ 
+<div class="container">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">登录</h3>
+        </div>
+
+        <div class="panel-body"> 
+
+            <form class="form-horizontal" id="loginForm">
+                <div class="form-group">
+                    <label for="loginname" class="col-sm-2 control-label">账号：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="loginname" name="loginname" placeholder="请输入账号">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">密码：</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="remember" name="remember">记住我</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" id="btnLogin" class="btn btn-default">登录</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+<script>
+    $(function () {
+ 
+        // 文档加载完成后，把.navbar隐藏掉，根据需要可以放开。
+        $('.navbar').hide();
+
+        // 点击登录按钮，发起ajax post请求, 注意：传递数据到服务端，响应成功跳转主页，不成功则弹出错误提示框
+        $('#btnLogin').click(function (ev) {
+            ev.preventDefault();
+
+            $.post('/user/login', $('#loginForm').serialize(), function (res) {
+                if (res.code == 200) {
+                    location.href = '/';
+                } else {
+                    $('#modal .modal-body').text(res.message);
+                    $('#modal').modal();
+                }
+            })
+        })
+
+    })
+
+</script>
+
+{{/block}}

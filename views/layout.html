@@ -1,0 +1,51 @@
+<!-- 定义全局的视图模板，其他视图可以继承此模板中已经定义好的结构，不用再从头开始创建，不仅节省代码，还可以利于文件分割，阅读方便 -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="董书华">
+    <!-- 定义一个“占位符”，其他视图中可以替换掉，title可以理解成是点位符的名称 -->
+    <title>{{block 'title'}}My Site{{/block}}</title>
+    <!-- 引入bootstrap的样式文件，脚本文件，由bootstrap依赖于jquery,特别注意jquery一定要在bootstrap.min.js上方 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- 如下两行代码是为了bootstrap可以在IE9以的IE浏览器很好执行，做了兼容性处理 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- 定义一个“占位符”， 在每一个视图中在替换此处，比如：每一个视图中有可能会设置一些专用的样式或脚本 -->
+    {{block 'head'}}{{/block}}
+</head>
+
+<body>
+    
+    <!-- 全部导航头部，注意：当login.html使用时，此头部信息隐藏了，根据不同的需求，可自行放开。 -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">增删查改示例(CURD)</a>
+        </div>
+    
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <div class="navbar-form navbar-right" role="search">
+                <!-- 退出功能，调用了服务器端的接口/user/logout，注意客户端发起请求后，服务器端如何匹配到接口的。 -->
+                <a class="btn btn-danger" href="/user/logout" role="button">退出</a>
+            </div>
+        </div>
+    </nav>
+    <!-- 定义内容区，每一个视图都可以定制此部分内容。这种每一个视图才充满多样性。 -->
+    {{block 'content'}}请替换{{/block}}
+</body>
+
+</html>
